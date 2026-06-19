@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>彭伟 — Brand Strategist Portfolio</title>
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --c-bg: #ffffff; --c-bg-alt: #f5f5f7; --c-bg-dark: #000000;
+  --c-text: #1d1d1f; --c-text-secondary: #6e6e73; --c-text-tertiary: #86868b;
+  --c-accent: #0071e3; --c-border: #d2d2d7; --c-border-light: #e8e8ed;
+  --font-display: -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", BlinkMacSystemFont, sans-serif;
+  --font-body: -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-apple: cubic-bezier(0.4, 0, 0.2, 1);
+  --glass-bg: rgba(255,255,255,0.72); --glass-blur: 20px;
+}
+
+/* ===== Reset & Base ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-body);background:var(--c-bg);color:var(--c-text);line-height:1.6;overflow-x:hidden}
+::selection{background:var(--c-text);color:#fff}
+
+/* ===== Loader ===== */
+#loader{position:fixed;inset:0;z-index:10000;background:#000;display:flex;align-items:center;justify-content:center;transition:opacity .5s var(--ease-out-expo);pointer-events:all}
+#loader.fade-out{opacity:0;pointer-events:none}
+#loader .loader-ring{width:40px;height:40px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ===== Scroll Progress Bar ===== */
+#scroll-progress{position:fixed;top:0;left:0;height:2px;background:var(--c-accent);z-index:101;width:0;transition:width .1s linear}
+
+/* ===== Typography ===== */
+h1{font-size:clamp(3.5rem,8vw,6.5rem);font-weight:600;letter-spacing:-.03em;color:var(--c-text);line-height:1.05}
+h2{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:600;letter-spacing:-.02em;color:var(--c-text);line-height:1.15}
+h3{font-size:1.25rem;font-weight:600;color:var(--c-text)}
+.section-tag{font-size:.7rem;font-weight:600;letter-spacing:.2em;margin-bottom:1.2rem;text-transform:uppercase}
+.section-header{text-align:center;margin-bottom:4rem}
+.section-header h2{margin-bottom:.6rem}
+
+/* ===== Navigation ===== */
+nav{position:fixed;top:0;width:100%;z-index:100;padding:0 2.5rem;transition:background .4s var(--ease-apple),backdrop-filter .4s var(--ease-apple),transform .35s var(--ease-apple),border-color .4s var(--ease-apple)}
+nav.at-hero{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:1px solid transparent}
+nav.at-hero .logo,nav.at-hero .links a{color:#fff}
+nav.at-hero .links a:hover{color:rgba(255,255,255,.75)}
+nav.scrolled{background:var(--glass-bg);backdrop-filter:blur(var(--glass-blur));-webkit-backdrop-filter:blur(var(--glass-blur));border-bottom:1px solid rgba(0,0,0,.08)}
+nav.scrolled .logo{color:var(--c-text)}
+nav.scrolled .links a{color:var(--c-text-tertiary)}
+nav.scrolled .links a:hover,nav.scrolled .links a.active{color:var(--c-text)}
+nav .inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:48px}
+nav .logo{font-size:1.05rem;font-weight:600;letter-spacing:-.01em;text-decoration:none;transition:color .4s var(--ease-apple)}
+nav .links{display:flex;gap:2.2rem;list-style:none}
+nav .links a{text-decoration:none;font-size:.8rem;font-weight:400;transition:color .3s;letter-spacing:.02em;position:relative}
+nav .links a.active::after{content:'';position:absolute;bottom:-4px;left:0;width:100%;height:1.5px;background:currentColor;border-radius:1px}
+nav .hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px;z-index:101}
+nav .hamburger span{display:block;width:18px;height:1.5px;background:var(--c-text);margin:4px 0;transition:transform .3s var(--ease-apple),opacity .3s var(--ease-apple)}
+nav.at-hero .hamburger span{background:#fff}
+nav .hamburger.open span:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
+nav .hamburger.open span:nth-child(2){opacity:0}
+nav .hamburger.open span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg)}
+
+/* ===== Mobile Nav Overlay ===== */
+.mobile-nav-overlay{position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s var(--ease-out-expo)}
+.mobile-nav-overlay.open{opacity:1;pointer-events:all}
+.mobile-nav-overlay a{color:#fff;font-size:1.6rem;text-decoration:none;padding:1rem 0;font-weight:500;letter-spacing:.04em;transition:opacity .3s}
+.mobile-nav-overlay a:hover{opacity:.6}
+
+/* ===== Hero ===== */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:6rem 2.5rem 4rem;position:relative;background:url('images/hero-bg.png') center/cover no-repeat;background-attachment:fixed;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.25) 50%,rgba(0,0,0,.45) 100%);z-index:0}
+.hero>*{position:relative;z-index:1}
+.hero .avatar{width:140px;height:140px;border-radius:50%;object-fit:cover;margin-bottom:2.5rem;box-shadow:0 0 0 4px rgba(255,255,255,.15);opacity:0;transform:translateY(30px)}
+.hero .tagline{font-size:.75rem;letter-spacing:.25em;color:rgba(255,255,255,.7);margin-bottom:2rem;font-weight:500;opacity:0;transform:translateY(30px)}
+.hero h1{color:#fff;margin-bottom:.8rem;opacity:0;transform:translateY(30px)}
+.hero .subtitle{font-size:clamp(1.1rem,2.5vw,1.5rem);color:rgba(255,255,255,.8);font-weight:300;margin-bottom:2.8rem;max-width:600px;line-height:1.8;opacity:0;transform:translateY(30px)}
+.hero .cta-group{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;opacity:0;transform:translateY(30px)}
+.hero.animate .avatar{animation:fadeUp .8s .05s var(--ease-out-expo) forwards}
+.hero.animate .tagline{animation:fadeUp .8s .15s var(--ease-out-expo) forwards}
+.hero.animate h1{animation:fadeUp .8s .25s var(--ease-out-expo) forwards}
+.hero.animate .subtitle{animation:fadeUp .8s .35s var(--ease-out-expo) forwards}
+.hero.animate .cta-group{animation:fadeUp .8s .45s var(--ease-out-expo) forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+.btn-white,.btn-outline-white{padding:.85rem 2.2rem;border-radius:100px;font-size:.9rem;font-weight:500;text-decoration:none;transition:all .3s var(--ease-apple);letter-spacing:.01em;display:inline-block}
+.btn-white{background:#fff;color:var(--c-text)}
+.btn-white:hover{background:#f5f5f7;transform:scale(1.02)}
+.btn-outline-white{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4)}
+.btn-outline-white:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.6)}
+.btn-black{padding:.85rem 2.2rem;border-radius:100px;font-size:.9rem;font-weight:500;text-decoration:none;transition:all .3s var(--ease-apple);background:var(--c-text);color:#fff;border:none;cursor:pointer;letter-spacing:.01em}
+.btn-black:hover{background:#000;transform:scale(1.02)}
+
+/* ===== Sections ===== */
+section{padding:6rem 2.5rem;position:relative}
+section .container{max-width:1100px;margin:0 auto;position:relative;z-index:1}
+
+/* ===== Scroll Reveal System ===== */
+.reveal{opacity:0;transition:opacity .8s var(--ease-out-expo),transform .8s var(--ease-out-expo)}
+.reveal.revealed{opacity:1;transform:none!important}
+.reveal-up{transform:translateY(40px)}
+.reveal-left{transform:translateX(-40px)}
+.reveal-right{transform:translateX(40px)}
+.reveal-scale{transform:scale(.92)}
+.reveal-s1{transition-delay:0ms}.reveal-s2{transition-delay:80ms}.reveal-s3{transition-delay:160ms}.reveal-s4{transition-delay:240ms}.reveal-s5{transition-delay:320ms}.reveal-s6{transition-delay:400ms}
+
+/* ===== About ===== */
+.about-section{background:var(--c-bg);position:relative;overflow:hidden}
+.about-section::before{content:'';position:absolute;inset:0;background:url('images/advantage-bg.jpg') center/cover no-repeat;opacity:.04;pointer-events:none;z-index:0}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.about-photo img{width:100%;border-radius:24px;display:block;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.about-text h3{font-size:clamp(1.4rem,2.5vw,1.8rem);margin-bottom:1.5rem;line-height:1.4}
+.about-text p{font-size:1rem;color:var(--c-text-secondary);line-height:1.9;margin-bottom:1.2rem}
+.about-text .philosophy{font-weight:600;color:var(--c-text);margin-bottom:1.8rem;font-size:1.05rem}
+.skill-row{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1.8rem}
+.skill-chip{padding:.5rem 1.1rem;border-radius:8px;font-size:.8rem;font-weight:500;background:var(--c-bg-alt);color:var(--c-text);border:none}
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;margin-top:4rem}
+.stat-item{text-align:center;padding-top:1.5rem;border-top:2px solid var(--c-accent)}
+.stat-number{font-size:clamp(2.5rem,5vw,3.5rem);font-weight:600;color:var(--c-text);line-height:1;letter-spacing:-.02em}
+.stat-label{font-size:.82rem;color:var(--c-text-tertiary);margin-top:.6rem;font-weight:500}
+
+/* ===== Experience ===== */
+.exp-section{background:var(--c-bg-alt);position:relative;overflow:hidden}
+.exp-section::before{content:'';position:absolute;right:0;top:0;bottom:0;width:50%;background:url('images/resume-bg.png') right center/contain no-repeat;opacity:.06;pointer-events:none}
+.exp-grid{max-width:800px;margin:0 auto;position:relative;padding-left:2.5rem}
+.exp-grid::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--c-border),var(--c-border-light));border-radius:1px}
+.exp-card{position:relative;padding-bottom:1.5rem}
+.exp-card:last-child{padding-bottom:0}
+.exp-card::before{content:'';position:absolute;left:-2.75rem;top:1.5rem;width:11px;height:11px;background:var(--c-text);border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px var(--c-border);z-index:1}
+.exp-card-inner{background:#fff;border-radius:16px;padding:1.8rem 2rem;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.exp-card .meta{display:flex;align-items:baseline;gap:.8rem;margin-bottom:.5rem;flex-wrap:wrap}
+.exp-card .date{font-size:.72rem;font-weight:600;letter-spacing:.1em;color:var(--c-text-tertiary)}
+.exp-card .company{font-size:1.2rem;font-weight:600;color:var(--c-text)}
+.exp-card .role{font-size:.85rem;color:var(--c-text-tertiary)}
+.exp-card .desc{color:var(--c-text-secondary);font-size:.9rem;line-height:2;margin-top:.6rem;list-style:none}
+.exp-card .desc li{margin-bottom:.1rem}
+.exp-card .desc li::before{content:'— ';color:var(--c-border);font-size:.6rem}
+
+/* ===== Works (Dark Section) ===== */
+.works-section{background:var(--c-bg-dark);position:relative;overflow:hidden}
+.works-section::before{content:'';position:absolute;inset:0;background:url('images/works-bg.jpg') center/cover no-repeat;opacity:.06;pointer-events:none}
+.works-section::after{content:'';position:absolute;inset:0;background:url('images/works-bg2.jpg') center/cover no-repeat;opacity:.04;pointer-events:none;mix-blend-mode:screen}
+.works-section .section-tag,.works-section h2{color:#f5f5f7}
+.works-section .section-tag{color:var(--c-text-tertiary)}
+.projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.project-card{border-radius:20px;overflow:hidden;background:#1a1a1a;border:1px solid rgba(255,255,255,.08);cursor:pointer;transition:all .5s var(--ease-out-expo)}
+.project-card:hover{transform:translateY(-8px);box-shadow:0 30px 60px rgba(0,0,0,.5);border-color:rgba(255,255,255,.15)}
+.project-card .card-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.project-card .card-body{padding:1.5rem}
+.project-card .card-body h3{font-size:1.05rem;margin-bottom:.5rem;color:#f5f5f7}
+.project-card .card-body p{font-size:.82rem;color:var(--c-text-tertiary);line-height:1.7}
+.project-card .card-tag{display:inline-block;margin-top:.8rem;padding:.3rem .8rem;border-radius:100px;font-size:.7rem;font-weight:500;background:rgba(255,255,255,.08);color:#a1a1a6}
+
+/* ===== Gallery ===== */
+.gallery-section{background:var(--c-bg)}
+.gallery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem}
+.gallery-item{position:relative;border-radius:16px;overflow:hidden;cursor:pointer}
+.gallery-item img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;transition:transform .6s var(--ease-out-expo)}
+.gallery-item:hover img{transform:scale(1.04)}
+.gallery-item .gallery-caption{position:absolute;bottom:0;left:0;right:0;padding:2rem 1.5rem 1.2rem;background:linear-gradient(transparent,rgba(0,0,0,.55));color:#fff;font-size:.85rem;font-weight:500;opacity:0;transform:translateY(10px);transition:opacity .3s,transform .3s var(--ease-apple)}
+.gallery-item:hover .gallery-caption{opacity:1;transform:translateY(0)}
+
+/* ===== Lifestyle ===== */
+.lifestyle-section{background:var(--c-bg-alt)}
+.lifestyle-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.lifestyle-photos{position:relative}
+.lifestyle-photos .photo-main{width:100%;border-radius:24px;display:block;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.lifestyle-photos .photo-secondary{position:absolute;bottom:-2rem;right:-2rem;width:45%;border-radius:16px;display:block;box-shadow:0 8px 32px rgba(0,0,0,.12);border:4px solid #fff}
+.lifestyle-text .lead{font-size:clamp(1.3rem,2.5vw,1.6rem);color:var(--c-text);margin-bottom:1.5rem;font-weight:500;line-height:1.4}
+.lifestyle-text p{font-size:.95rem;color:var(--c-text-secondary);line-height:1.9;margin-bottom:1rem}
+.hobby-icons{display:flex;gap:.6rem;margin-top:.8rem}
+.hobby-icons img{width:48px;height:48px;border-radius:12px;object-fit:cover}
+
+/* ===== Contact (Dark Section) ===== */
+.contact-section{background:var(--c-bg-dark);position:relative;overflow:hidden}
+.contact-section::before{content:'';position:absolute;inset:0;background:url('images/contact-bg.jpg') center/cover no-repeat;opacity:.12;pointer-events:none}
+.contact-section .section-tag{color:var(--c-text-tertiary)}
+.contact-section h2{color:#fff}
+.contact-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:4rem;align-items:start}
+.contact-heading h2{margin-bottom:1rem}
+.contact-heading p{color:rgba(255,255,255,.65);font-size:1rem;line-height:1.8}
+.contact-form{display:flex;flex-direction:column;gap:1rem}
+.contact-form input,.contact-form textarea{width:100%;padding:.9rem 1.2rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:12px;color:#fff;font-size:.9rem;font-family:var(--font-body);transition:border-color .3s,background .3s;outline:none;resize:vertical}
+.contact-form input:focus,.contact-form textarea:focus{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.12)}
+.contact-form input::placeholder,.contact-form textarea::placeholder{color:rgba(255,255,255,.35)}
+.contact-form .error-msg{font-size:.75rem;color:#ff453a;margin-top:-.5rem;display:none}
+.contact-form .field-error input,.contact-form .field-error textarea{border-color:#ff453a}
+.contact-form .field-error .error-msg{display:block}
+.contact-form .btn-white{align-self:flex-start;margin-top:.4rem}
+.contact-form .success-msg{color:#30d158;font-size:.85rem;display:none}
+.contact-info-row{display:flex;gap:1.5rem;margin-top:2rem;flex-wrap:wrap;justify-content:flex-start}
+.contact-info-row .ci-item{display:flex;align-items:center;gap:.5rem;color:rgba(255,255,255,.5);font-size:.8rem}
+.contact-info-row .ci-item strong{color:rgba(255,255,255,.7);font-weight:500}
+
+/* ===== Footer ===== */
+footer{background:#1d1d1f;padding:2.5rem;text-align:center;font-size:.8rem;color:var(--c-text-tertiary)}
+footer p+p{margin-top:.3rem;color:#6e6e73}
+
+/* ===== Project Modal ===== */
+.project-modal{position:fixed;inset:0;z-index:1000;display:flex;align-items:flex-start;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s var(--ease-apple)}
+.project-modal.open{opacity:1;pointer-events:all}
+.project-modal .modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.85);cursor:pointer}
+.project-modal .modal-content{position:relative;width:100%;max-width:900px;max-height:100vh;overflow-y:auto;background:var(--c-bg);border-radius:0 0 20px 20px;transform:translateY(60px);transition:transform .5s var(--ease-out-expo);margin-bottom:0}
+.project-modal.open .modal-content{transform:translateY(0)}
+.project-modal .modal-close{position:sticky;top:1rem;float:right;margin-right:1rem;z-index:10;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.06);border:none;cursor:pointer;font-size:1.2rem;color:var(--c-text-tertiary);display:flex;align-items:center;justify-content:center;transition:background .3s;line-height:1}
+.project-modal .modal-close:hover{background:rgba(0,0,0,.12)}
+.project-modal .modal-hero{width:100%;max-height:50vh;overflow:hidden}
+.project-modal .modal-hero img{width:100%;height:50vh;object-fit:cover;display:block;transform:scale(.95);transition:transform .6s var(--ease-out-expo)}
+.project-modal.open .modal-hero img{transform:scale(1)}
+.project-modal .modal-body{padding:clamp(2rem,6vw,4rem)}
+.project-modal .modal-body .modal-tag{font-size:.7rem;font-weight:600;letter-spacing:.2em;color:var(--c-text-tertiary);text-transform:uppercase;margin-bottom:1rem}
+.project-modal .modal-body h2{font-size:clamp(2rem,5vw,3rem);margin-bottom:2rem}
+.project-modal .modal-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:2.5rem;padding-bottom:2.5rem;border-bottom:1px solid var(--c-border-light)}
+.project-modal .modal-metric{text-align:center;padding-top:1.2rem;border-top:2px solid var(--c-accent)}
+.project-modal .modal-metric .m-val{font-size:2.2rem;font-weight:600;color:var(--c-text);line-height:1;letter-spacing:-.02em}
+.project-modal .modal-metric .m-label{font-size:.78rem;color:var(--c-text-tertiary);margin-top:.5rem}
+.project-modal .modal-narrative{font-size:1.05rem;color:var(--c-text-secondary);line-height:1.9}
+.project-modal .modal-narrative p{margin-bottom:1.2rem}
+.project-modal .modal-detail-img{width:100%;border-radius:12px;margin:1.5rem 0}
+
+/* ===== Responsive ===== */
+@media(max-width:1024px){.projects-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){
+  nav .links{display:none}
+  nav .hamburger{display:block}
+  nav{padding:0 1.5rem}
+  section{padding:4rem 1.5rem}
+  .about-grid,.lifestyle-grid,.contact-grid{grid-template-columns:1fr}
+  .about-grid{gap:2.5rem}
+  .projects-grid{grid-template-columns:1fr}
+  .gallery-grid{grid-template-columns:1fr}
+  .stats-bar{grid-template-columns:repeat(2,1fr);gap:1.5rem}
+  .lifestyle-photos .photo-secondary{right:0;width:40%}
+  .contact-grid{gap:2.5rem}
+  .hero .avatar{width:110px;height:110px}
+  .exp-grid{padding-left:2rem}
+  .exp-card::before{left:-2.25rem}
+  .modal-metrics{grid-template-columns:repeat(3,1fr);gap:.8rem}
+}
+@media(max-width:768px){
+  .hero{background-attachment:scroll!important}
+}
+@media(max-width:600px){
+  h1{font-size:2.5rem}h2{font-size:1.8rem}
+  .hero .avatar{width:90px;height:90px}
+  .hero .subtitle{font-size:1rem}
+  .exp-card-inner{padding:1.2rem 1.4rem}
+  .contact-info-row{flex-direction:column;gap:.6rem}
+  .project-modal .modal-body h2{font-size:1.6rem}
+  .project-modal .modal-metric .m-val{font-size:1.6rem}
+}
+</style>
+</head>
+<body>
+
+<!-- Loader -->
+<div id="loader" aria-hidden="true"><div class="loader-ring"></div></div>
+
+<!-- Scroll Progress -->
+<div id="scroll-progress" aria-hidden="true"></div>
+
+<!-- Navigation -->
+<nav id="navbar" class="at-hero">
+  <div class="inner">
+    <a href="#hero" class="logo">Peng Wei</a>
+    <ul class="links" id="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#works">Works</a></li>
+      <li><a href="#lifestyle">Lifestyle</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- Mobile Nav Overlay -->
+<div class="mobile-nav-overlay" id="mobile-nav" aria-hidden="true">
+  <a href="#about">About</a>
+  <a href="#experience">Experience</a>
+  <a href="#works">Works</a>
+  <a href="#lifestyle">Lifestyle</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <img src="images/personal-photo.jpg" alt="彭伟" class="avatar" loading="eager">
+  <div class="tagline">BRAND STRATEGIST</div>
+  <h1>彭伟</h1>
+  <p class="subtitle">三年半品牌营销策划经验。<br>从乙方到甲方，从策略到落地，<br>助力品牌实现真实增长。</p>
+  <div class="cta-group">
+    <a href="#works" class="btn-white">查看作品</a>
+    <a href="#contact" class="btn-outline-white">联系我</a>
+  </div>
+</section>
+
+<!-- About -->
+<section class="about-section" id="about">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">01 · About</div>
+      <h2>关于我</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-photo reveal reveal-left">
+        <img src="images/about-photo.png" alt="彭伟个人照片" loading="lazy">
+      </div>
+      <div class="about-text reveal reveal-right">
+        <h3>毕业于湖南涉外经济学院<br>视觉传达设计 / 广告营销方向</h3>
+        <p>三年半营销策划经验，善于将抽象的品牌理论知识转化为实际方法论。主导/深度参与多个品牌项目，包括美的、创维、全棉时代等<strong>30+</strong>，通过精准的市场分析及用户洞察帮助品牌达成其销售目标，为品牌在市场中取得份额。</p>
+        <p class="philosophy">工作哲学：主动 · 成长 · 创新 · 前置</p>
+        <div class="skill-row">
+          <span class="skill-chip">品牌策略</span><span class="skill-chip">整合营销</span><span class="skill-chip">项目管理</span><span class="skill-chip">社媒运营</span><span class="skill-chip">Office</span><span class="skill-chip">Photoshop</span><span class="skill-chip">Illustrator</span><span class="skill-chip">英语</span>
+        </div>
+      </div>
+    </div>
+    <div class="stats-bar reveal reveal-up">
+      <div class="stat-item"><div class="stat-number">30+</div><div class="stat-label">品牌项目</div></div>
+      <div class="stat-item"><div class="stat-number">3.5年</div><div class="stat-label">策划经验</div></div>
+      <div class="stat-item"><div class="stat-number">6640万+</div><div class="stat-label">主导活动曝光</div></div>
+      <div class="stat-item"><div class="stat-number">1.6万+</div><div class="stat-label">自媒体涨粉</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Experience -->
+<section class="exp-section" id="experience">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">02 · Experience</div>
+      <h2>工作经历</h2>
+    </div>
+    <div class="exp-grid">
+      <div class="exp-card reveal reveal-up reveal-s1">
+        <div class="exp-card-inner">
+          <div class="meta"><span class="date">2024 · 至今</span><span class="company">素士科技</span><span class="role">品牌策划</span></div>
+          <ul class="desc">
+            <li>统筹官方自媒体日常运营，5个月累计涨粉16,302</li>
+            <li>对接设计、电商策划进行节点营销，销售同比上升15.9%</li>
+            <li>品牌舆情维护，采取官方公关+控评+技术压制手段</li>
+            <li>参与各大展会活动，把控品牌内容输出</li>
+          </ul>
+        </div>
+      </div>
+      <div class="exp-card reveal reveal-up reveal-s2">
+        <div class="exp-card-inner">
+          <div class="meta"><span class="date">2023 · 2024</span><span class="company">全棉时代</span><span class="role">整合营销高级专员</span></div>
+          <ul class="desc">
+            <li>统筹推进项目全流程，对接商品部门及外部供应商，确保活动按时落地</li>
+            <li>策划落地10余场活动：节日营销快闪、品牌发布会、明星见面会、展会</li>
+            <li>线下累计触达100万目标客群，带动线上曝光1亿+</li>
+            <li>按月整理用户反馈及行业趋势，为营销活动迭代升级提供支撑</li>
+          </ul>
+        </div>
+      </div>
+      <div class="exp-card reveal reveal-up reveal-s3">
+        <div class="exp-card-inner">
+          <div class="meta"><span class="date">2022 · 2023</span><span class="company">精实智库</span><span class="role">品牌策划</span></div>
+          <ul class="desc">
+            <li>服务美的、创维、铭普等品牌，从0到1搭建品牌体系</li>
+            <li>主导美的INFINI无际套系上市包装案，耗时3个月顺利上市</li>
+            <li>为铭普完成品牌升级，搭建品牌屋，策划品牌战略升级发布会</li>
+            <li>制定创维23年度海外社媒传播策略及铭普23年年度营销策略</li>
+          </ul>
+        </div>
+      </div>
+      <div class="exp-card reveal reveal-up reveal-s4">
+        <div class="exp-card-inner">
+          <div class="meta"><span class="date">2020 · 2022</span><span class="company">飞鱼新媒体</span><span class="role">营销策划专员</span></div>
+          <ul class="desc">
+            <li>负责甲方新媒体投放推广方案40+，成交率近20%</li>
+            <li>主导欧铂尼年框项目金额达150万</li>
+            <li>投放平台覆盖小红书、抖音，品类覆盖母婴、美妆、家居</li>
+            <li>负责推广效果监控和数据整合分析，输出结案报告</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Works -->
+<section class="works-section" id="works">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">03 · Selected Works</div>
+      <h2>代表作品</h2>
+    </div>
+    <div class="projects-grid" id="projects-row-1">
+      <div class="project-card reveal reveal-scale reveal-s1" data-project="cotton">
+        <img src="images/project-cotton.png" alt="全棉时代" class="card-img" loading="lazy">
+        <div class="card-body">
+          <h3>全棉时代 · 棉花色主题展</h3>
+          <p>一朵棉花·晶心守护，串联代言人郭晶晶，线上话题传播+线下科普主题展落地。</p>
+          <span class="card-tag">总曝光 6640万+ · 会员拉新 15万+</span>
+        </div>
+      </div>
+      <div class="project-card reveal reveal-scale reveal-s2" data-project="midea">
+        <img src="images/project-midea.png" alt="美的INFINI" class="card-img" loading="lazy">
+        <div class="card-body">
+          <h3>美的 INFINI · 无际套系</h3>
+          <p>美的首套中高端家电套系上市包装，提炼人因智能、人感科技、人居设计三大DNA。</p>
+          <span class="card-tag">包屏机场 · 成功上市发布</span>
+        </div>
+      </div>
+      <div class="project-card reveal reveal-scale reveal-s3" data-project="mentech">
+        <img src="images/project-mentech.png" alt="铭普光磁" class="card-img" loading="lazy">
+        <div class="card-body">
+          <h3>铭普光磁 · 品牌升级</h3>
+          <p>深度行业分析+品牌升级+展厅策划落地，对接国家地理IP、深潜俱乐部，搭建自媒体矩阵。</p>
+          <span class="card-tag">股价 9元→19元 翻倍 · 14周年发布</span>
+        </div>
+      </div>
+    </div>
+    <div class="projects-grid" style="margin-top:1.5rem" id="projects-row-2">
+      <div class="project-card reveal reveal-scale reveal-s4" data-project="fangtai">
+        <img src="images/project-fangtai.png" alt="方太" class="card-img" loading="lazy">
+        <div class="card-body">
+          <h3>方太 A-MAX · 社媒传播</h3>
+          <p>方太超薄全面屏烟机下半年社媒推广方案，差异化内容策略击穿用户心智。</p>
+          <span class="card-tag">总曝光 3596万+ · CPM 降低 48%</span>
+        </div>
+      </div>
+      <div class="project-card reveal reveal-scale reveal-s5" data-project="soyes">
+        <img src="images/project-sushi.png" alt="素士七夕" class="card-img" loading="lazy">
+        <div class="card-body">
+          <h3>素士 · 七夕节点营销</h3>
+          <p>"刷出同频·去感受爱"，种子纸礼盒+自媒体征集+小红书投放，传递品牌温度。</p>
+          <span class="card-tag">曝光 223万+ · GMV 环比提升 15.9%</span>
+        </div>
+      </div>
+      <div class="project-card reveal reveal-scale reveal-s6" data-project="seekingmouse">
+        <img src="images/project-seekingmouse.png" alt="Seeking Mouse" class="card-img" loading="lazy">
+        <div class="card-body">
+          <h3>Seeking Mouse · 品牌构建</h3>
+          <p>从0到1搭建儿童环保品牌，顶层策略+VI体系+营销物料全链路输出。</p>
+          <span class="card-tag">品牌0→1 · 一站式儿童环保生活服务商</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Gallery -->
+<section class="gallery-section" id="gallery">
+  <div class="container">
+    <div class="section-header" style="margin-bottom:2.5rem">
+      <div class="section-tag">04 · Gallery</div>
+      <h2>更多项目图集</h2>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item reveal reveal-up reveal-s1">
+        <img src="images/project-midea.png" alt="美的产品海报" loading="lazy">
+        <div class="gallery-caption">美的 · 产品视觉海报</div>
+      </div>
+      <div class="gallery-item reveal reveal-up reveal-s2">
+        <img src="images/project-sushi2.png" alt="素士品牌活动" loading="lazy">
+        <div class="gallery-caption">素士 · 品牌活动视觉</div>
+      </div>
+      <div class="gallery-item reveal reveal-up reveal-s3">
+        <img src="images/personal-3.png" alt="品牌策划场景" loading="lazy">
+        <div class="gallery-caption">品牌策划 · 工作场景</div>
+      </div>
+      <div class="gallery-item reveal reveal-up reveal-s4">
+        <img src="images/about-photo2.png" alt="品牌视觉" loading="lazy">
+        <div class="gallery-caption">品牌视觉 · 创意输出</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Lifestyle -->
+<section class="lifestyle-section" id="lifestyle">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">05 · Lifestyle</div>
+      <h2>生活灵感</h2>
+    </div>
+    <div class="lifestyle-grid">
+      <div class="lifestyle-photos reveal reveal-left">
+        <img src="images/personal-1.png" alt="户外灵感" class="photo-main" loading="lazy">
+        <img src="images/personal-2.png" alt="生活记录" class="photo-secondary" loading="lazy">
+      </div>
+      <div class="lifestyle-text reveal reveal-right">
+        <p class="lead">健身户外 · 美术 · 文学</p>
+        <p>自我管理的同时，热衷探索大自然，取自然之灵感，点睛于本人的工作学习中。大自然为我的灵感源泉。</p>
+        <p>艺术生出身，美术带来的影响持续至今。国画、油画等艺术画作在让我习得心性的同时，丰富了许多对事物理解多样化的维度。</p>
+        <p>形势不好时，听听教员怎么说。文学让我在纷繁中保持清醒。</p>
+        <div class="skill-row">
+          <span class="skill-chip">户外旅行</span><span class="skill-chip">健身</span><span class="skill-chip">国画</span><span class="skill-chip">油画</span><span class="skill-chip">文学</span>
+        </div>
+        <div class="hobby-icons">
+          <img src="images/hobby-outdoor.png" alt="户外" loading="lazy">
+          <img src="images/hobby-art.png" alt="艺术" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="contact-section" id="contact">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-heading reveal reveal-left">
+        <div class="section-tag">06 · Contact</div>
+        <h2>让品牌策略<br>创造真实增长。</h2>
+        <p>如果你在寻找能将品牌理论<br>落地为市场成果的策划人，欢迎联系。</p>
+      </div>
+      <div class="reveal reveal-right">
+        <form class="contact-form" id="contact-form" novalidate>
+          <div class="form-field">
+            <input type="text" name="name" placeholder="姓名" required>
+            <span class="error-msg">请输入姓名</span>
+          </div>
+          <div class="form-field">
+            <input type="email" name="email" placeholder="邮箱" required>
+            <span class="error-msg">请输入有效的邮箱地址</span>
+          </div>
+          <div class="form-field">
+            <textarea name="message" rows="4" placeholder="留言内容" required></textarea>
+            <span class="error-msg">请输入留言内容</span>
+          </div>
+          <button type="submit" class="btn-white">发送消息</button>
+          <span class="success-msg">✓ 消息已发送，感谢联系！</span>
+        </form>
+        <div class="contact-info-row">
+          <div class="ci-item"><strong>手机</strong>&nbsp;13142094802</div>
+          <div class="ci-item"><strong>邮箱</strong>&nbsp;2795801146@qq.com</div>
+          <div class="ci-item"><strong>微信</strong>&nbsp;Dean-0711</div>
+          <div class="ci-item"><strong>城市</strong>&nbsp;广东省 · 深圳市</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>© 2026 彭伟 · Brand Strategist Portfolio</p>
+  <p>从海上而来，浪花满袖。沐光而行，穿越逆境，抵达繁星。</p>
+</footer>
+
+<!-- Project Detail Modal -->
+<div class="project-modal" id="project-modal" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="modal-backdrop"></div>
+  <div class="modal-content">
+    <button class="modal-close" aria-label="关闭">×</button>
+    <div class="modal-hero"><img id="modal-hero-img" src="" alt=""></div>
+    <div class="modal-body">
+      <div class="modal-tag" id="modal-tag"></div>
+      <h2 id="modal-title"></h2>
+      <div class="modal-metrics" id="modal-metrics"></div>
+      <div class="modal-narrative" id="modal-desc"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== Project Data Store ===== */
+const projectData = {
+  cotton: {
+    title: '全棉时代 · 棉花色主题展',
+    tag: '整合营销 · 品牌活动 · 2023',
+    heroImg: 'images/project-cotton.png',
+    metrics: [
+      { value: '6640万+', label: '总曝光量' },
+      { value: '15万+', label: '会员拉新' },
+      { value: '100万+', label: '线下触达客群' }
+    ],
+    narrative: [
+      '以"一朵棉花·晶心守护"为核心主题，联动全棉时代品牌代言人郭晶晶，打造线上线下整合营销Campaign。线上通过社交媒体话题传播、KOL矩阵种草，线下落地科普主题展，在深圳、上海、北京三城核心商圈同步开展。',
+      '项目期间，线上话题阅读量突破6640万，线下展览累计触达100万目标客群，品牌会员新增超过15万人。展览通过沉浸式体验将棉花种植、环保理念与品牌价值观深度结合，有效强化了全棉时代"天然、健康、环保"的品牌定位。',
+      '该项目获得全棉时代内部年度最佳Campaign奖项，并作为标杆案例在品牌内部进行全国推广复刻。'
+    ]
+  },
+  midea: {
+    title: '美的 INFINI · 无际套系',
+    tag: '品牌上市 · 产品包装 · 2022',
+    heroImg: 'images/project-seekingmouse.png',
+    metrics: [
+      { value: '3个月', label: '项目周期' },
+      { value: '三大DNA', label: '品牌价值体系' },
+      { value: 'NEXT 3000', label: '上市发布会规模' }
+    ],
+    narrative: [
+      '美的首套中高端家电套系"INFINI无际"的上市包装项目，从0到1构建产品品牌体系。提炼"人因智能、人感科技、人居设计"三大核心DNA，以此为基础延展全链路营销物料——产品主视觉、TVC脚本、终端陈列、线上详情页、上市发布会。',
+      '项目历时3个月，统筹设计、研发、市场、渠道多部门协作。上市当天包屏深圳、广州机场LED大屏，同步举办3000人规模发布会，邀请行业媒体、KOL及核心经销商到场。',
+      'INFINI无际套系的成功上市标志着美的高端化战略的重要里程碑，产品品牌包装模式随后被复制到美的其他高端套系产品线中。'
+    ]
+  },
+  mentech: {
+    title: '铭普光磁 · 品牌升级',
+    tag: '品牌战略 · 升级发布 · 2023',
+    heroImg: 'images/project-mentech.png',
+    detailImg: 'images/project-mentech-detail.jpg',
+    metrics: [
+      { value: '9→19元', label: '股价翻倍增长' },
+      { value: '14周年', label: '品牌战略升级' },
+      { value: '3大IP', label: '国家地理等合作' }
+    ],
+    narrative: [
+      '铭普光磁14周年品牌战略全面升级项目。在深度行业调研与竞品分析基础上，为铭普重新搭建品牌屋体系，明确品牌定位、核心价值主张及传播策略。',
+      '策划并落地品牌战略升级发布会，对接国家地理IP、深潜俱乐部等三大战略合作伙伴，扩大品牌影响力。同步建立品牌自媒体矩阵体系（公众号、视频号、抖音），搭建完整的品牌内容输出机制。',
+      '项目执行期间，铭普股价从9元攀升至19元实现翻倍。品牌展厅同步落地，涵盖产品展示、品牌故事、互动体验三大功能区，成为接待客户、品牌传播的重要窗口。'
+    ]
+  },
+  fangtai: {
+    title: '方太 A-MAX · 社媒传播',
+    tag: '社媒策略 · 内容营销 · 2023',
+    heroImg: 'images/project-fangtai.png',
+    metrics: [
+      { value: '3596万+', label: '总曝光量' },
+      { value: '48%', label: 'CPM成本降幅' },
+      { value: '差异化', label: '内容策略定位' }
+    ],
+    narrative: [
+      '方太A-MAX超薄全面屏烟机下半年社媒传播策略方案。针对新品核心卖点"超薄全面屏"制定差异化内容策略，以"厨房里的艺术品"为传播主线，打破传统烟机品类的功能传播惯性。',
+      '策略覆盖小红书、抖音、微博三大平台，通过场景化内容（真实厨房改造、设计师开箱、美食博主植入）建立用户心智。投放期间总曝光3596万+，CPM较行业均值降低48%。',
+      '该方案被方太市场部评为年度优秀供应商案例，差异化内容策略后续被拓展至方太其他产品线的社媒传播中。'
+    ]
+  },
+  soyes: {
+    title: '素士 · 七夕节点营销',
+    tag: '节点营销 · 情感传播 · 2024',
+    heroImg: 'images/project-sushi.png',
+    metrics: [
+      { value: '223万+', label: '活动总曝光' },
+      { value: '15.9%', label: 'GMV环比提升' },
+      { value: '52万+', label: '话题互动量' }
+    ],
+    narrative: [
+      '"刷出同频·去感受爱"——素士2024年七夕节点营销Campaign。围绕"同频"这一情感关键词，将产品功能（声波震动）与亲密关系中的"默契同频"巧妙关联，赋予电动牙刷礼物属性。',
+      '创意物料包括种子纸礼盒（种出花花后传递爱意）、自媒体UGC征集活动、小红书达人矩阵投放。线上话题互动量52万+，活动期间GMV环比增长15.9%。',
+      '种子纸礼盒设计成为品牌出圈资产，获得多家设计媒体转发报道。该Campaign验证了情感化内容策略在个护小家电品类的有效性。'
+    ]
+  },
+  seekingmouse: {
+    title: 'Seeking Mouse · 品牌构建',
+    tag: '品牌0→1 · VI体系 · 全链路',
+    heroImg: 'images/project-seekingmouse-detail.jpg',
+    detailImg: 'images/project-seekingmouse-brand.jpg',
+    metrics: [
+      { value: '0→1', label: '品牌从零搭建' },
+      { value: '全链路', label: '策略到物料输出' },
+      { value: '一站式', label: '儿童环保生活服务' }
+    ],
+    narrative: [
+      'Seeking Mouse是一个面向儿童的环保生活品牌，从0到1完成品牌顶层策略构建。项目涵盖品牌定位、使命愿景提炼、核心价值主张、品牌故事体系、VI视觉识别系统、全套营销物料设计。',
+      '品牌定位为"一站式儿童环保生活服务商"，通过环保材质产品+生活教育内容+社群运营的商业模式闭环，实现品牌差异化。VI体系以自然、探索为核心视觉语言，贯穿Logo、色彩、字体、包装、电商详情页。',
+      '输出成果包括品牌手册、VI规范手册、产品包装体系、电商终端物料、社媒内容矩阵模板，为品牌后续的市场推广奠定完整的品牌资产基础。'
+    ]
+  }
+};
+
+/* ===== Loader ===== */
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const loader = document.getElementById('loader');
+    loader.classList.add('fade-out');
+    setTimeout(() => loader.remove(), 500);
+    document.querySelector('.hero').classList.add('animate');
+  }, 400);
+});
+
+/* ===== Navbar: 3-state scroll behavior ===== */
+const navbar = document.getElementById('navbar');
+const hero = document.getElementById('hero');
+let lastScroll = 0;
+
+function updateNav() {
+  const y = window.pageYOffset;
+  const heroH = hero.offsetHeight;
+  if (y <= heroH - 80) {
+    navbar.className = 'at-hero';
+  } else {
+    navbar.className = 'scrolled';
+  }
+  if (y <= 0) {
+    navbar.style.transform = 'translateY(0)';
+  } else if (y > lastScroll && y > 80) {
+    navbar.style.transform = 'translateY(-100%)';
+  } else {
+    navbar.style.transform = 'translateY(0)';
+  }
+  lastScroll = y;
+}
+window.addEventListener('scroll', updateNav, { passive: true });
+
+/* ===== Scroll Progress ===== */
+const progressBar = document.getElementById('scroll-progress');
+window.addEventListener('scroll', () => {
+  const scrollH = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = scrollH > 0 ? (window.pageYOffset / scrollH) * 100 : 0;
+  progressBar.style.width = pct + '%';
+}, { passive: true });
+
+/* ===== Active Section Highlighting ===== */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('#nav-links a');
+const observerOptions = { rootMargin: '-20% 0px -70% 0px' };
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.getAttribute('id');
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+    }
+  });
+}, observerOptions);
+sections.forEach(s => sectionObserver.observe(s));
+
+/* ===== Smooth scroll with nav offset ===== */
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', e => {
+    const target = document.querySelector(link.getAttribute('href'));
+    if (!target) return;
+    e.preventDefault();
+    const navH = 48;
+    const top = target.getBoundingClientRect().top + window.pageYOffset - navH;
+    window.scrollTo({ top, behavior: 'smooth' });
+  });
+});
+
+/* ===== Mobile Hamburger ===== */
+const hamburger = document.getElementById('hamburger');
+const mobileNav = document.getElementById('mobile-nav');
+const mobileLinks = mobileNav.querySelectorAll('a');
+
+function toggleMobileNav() {
+  const open = mobileNav.classList.toggle('open');
+  hamburger.classList.toggle('open', open);
+  mobileNav.setAttribute('aria-hidden', !open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+hamburger.addEventListener('click', toggleMobileNav);
+mobileLinks.forEach(a => a.addEventListener('click', () => {
+  mobileNav.classList.remove('open');
+  hamburger.classList.remove('open');
+  mobileNav.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}));
+
+/* ===== Scroll Reveal ===== */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('revealed');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ===== Project Modal ===== */
+const modal = document.getElementById('project-modal');
+const modalHeroImg = document.getElementById('modal-hero-img');
+const modalTag = document.getElementById('modal-tag');
+const modalTitle = document.getElementById('modal-title');
+const modalMetrics = document.getElementById('modal-metrics');
+const modalDesc = document.getElementById('modal-desc');
+const modalClose = modal.querySelector('.modal-close');
+const modalBackdrop = modal.querySelector('.modal-backdrop');
+const modalContent = modal.querySelector('.modal-content');
+
+function openModal(id) {
+  const d = projectData[id];
+  if (!d) return;
+  modalHeroImg.src = d.heroImg;
+  modalHeroImg.alt = d.title;
+  modalTag.textContent = d.tag;
+  modalTitle.textContent = d.title;
+  modalMetrics.innerHTML = d.metrics.map(m =>
+    `<div class="modal-metric"><div class="m-val">${m.value}</div><div class="m-label">${m.label}</div></div>`
+  ).join('');
+  let descHtml = d.narrative.map(p => `<p>${p}</p>`).join('');
+  if (d.detailImg) {
+    descHtml += `<img src="${d.detailImg}" alt="${d.title} 详情" class="modal-detail-img" loading="lazy">`;
+  }
+  modalDesc.innerHTML = descHtml;
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  modalContent.scrollTop = 0;
+  modalClose.focus();
+}
+
+function closeModal() {
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+document.querySelectorAll('.project-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const id = card.getAttribute('data-project');
+    if (id) openModal(id);
+  });
+});
+modalClose.addEventListener('click', closeModal);
+modalBackdrop.addEventListener('click', closeModal);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+});
+
+/* ===== Contact Form Validation ===== */
+const contactForm = document.getElementById('contact-form');
+contactForm.addEventListener('submit', e => {
+  e.preventDefault();
+  let valid = true;
+  const fields = contactForm.querySelectorAll('.form-field');
+  fields.forEach(f => f.classList.remove('field-error'));
+  const name = contactForm.querySelector('[name="name"]');
+  const email = contactForm.querySelector('[name="email"]');
+  const message = contactForm.querySelector('[name="message"]');
+
+  if (!name.value.trim()) {
+    name.closest('.form-field').classList.add('field-error');
+    valid = false;
+  }
+  if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+    email.closest('.form-field').classList.add('field-error');
+    valid = false;
+  }
+  if (!message.value.trim()) {
+    message.closest('.form-field').classList.add('field-error');
+    valid = false;
+  }
+  if (valid) {
+    contactForm.querySelector('.success-msg').style.display = 'block';
+    contactForm.querySelector('.btn-white').disabled = true;
+    contactForm.querySelector('.btn-white').textContent = '已发送';
+    console.log('Form submitted:', { name: name.value, email: email.value, message: message.value });
+    setTimeout(() => {
+      contactForm.querySelector('.success-msg').style.display = 'none';
+      contactForm.querySelector('.btn-white').disabled = false;
+      contactForm.querySelector('.btn-white').textContent = '发送消息';
+      contactForm.reset();
+    }, 3000);
+  }
+});
+</script>
+</body>
+</html>
